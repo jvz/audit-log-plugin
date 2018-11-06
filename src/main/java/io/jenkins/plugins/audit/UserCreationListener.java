@@ -36,7 +36,7 @@ import org.apache.logging.log4j.core.util.NetUtils;
  * Listener notified of user account creation events.
  */
 public abstract class UserCreationListener extends ExtensionPoint {
-      
+
     CreateUser user = LogEventFactory.getEvent(CreateUser.class);
     String hostName = NetUtils.getLocalHostname();
     String inetAddress = InetAddress.getLocalHost().getHostAddress();
@@ -55,7 +55,7 @@ public abstract class UserCreationListener extends ExtensionPoint {
         String currentTime = Instant.now().toString();
         RequestContext.setHostName(hostName);
         RequestContext.setIpAddress(inetAddress);
-        RequestContext.setTimeStamp()
+        RequestContext.setTimeStamp();
         RequestContext.setUserId(username);
 
         user.setUserId(username);
@@ -64,7 +64,7 @@ public abstract class UserCreationListener extends ExtensionPoint {
         RequestContext.clear();
 
         for (UserCreationListener u : all()) {
-            u.userCreated(username)
+            u.userCreated(username);
         }
     }
 
@@ -72,5 +72,5 @@ public abstract class UserCreationListener extends ExtensionPoint {
         return ExtensionList.lookup(UserCreationListener.class);
     }
 
-    
+
 }
