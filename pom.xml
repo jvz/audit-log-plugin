@@ -5,7 +5,6 @@
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
         <version>3.25</version>
-        <url>https://logging.apache.org/log4j-audit</url>
         <relativePath />
     </parent>
     <artifactId>audit-log-plugin</artifactId>
