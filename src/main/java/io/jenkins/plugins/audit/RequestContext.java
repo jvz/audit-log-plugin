@@ -32,7 +32,7 @@
      * Defines all the variables that an application needs to be available in the ThreadContext for audit logging and
      * general application usage.
      */
-    @HeaderPrefix("mycorp-context-")
+    @HeaderPrefix("jenkins")
     public final class RequestContext {
         @ClientServer
         public static final String REQUEST_ID = "requestId";
