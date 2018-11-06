@@ -56,12 +56,14 @@
         public static final String HOST_NAME = "hostName";
 
         private static final String LOCAL_HOST_NAME = NetUtils.getLocalHostname();
+        
         /**
          * The Supplier is used to populate the hostName key after the hostName value from the caller has been
          * placed into the callingHost map entry.
          */
         @Chained(fieldName = HOST_NAME, chainedFieldName = CALLING_HOST)
         public static final Supplier<String> LOCAL_HOST_SUPPLIER = () -> LOCAL_HOST_NAME;
+
         /**
          * The methods in this class are not required by framework components that use the RequestContext properties.
          * They are provided as a convenience for applications. If they are not provided the properties can be accessed
@@ -160,4 +162,6 @@
         public static void setCallingHost(String hostName) {
             ThreadContext.put(CALLING_HOST, hostName);
         }
+        
+        
     }
