@@ -38,9 +38,9 @@ import org.apache.logging.log4j.core.util.NetUtils;
 public abstract class UserCreationListener extends ExtensionPoint {
 
 	CreateUser user = LogEventFactory.getEvent(CreateUser.class);
-	
+
 	String hostName = NetUtils.getLocalHostname();
-    String inetAddress = InetAddress.getLocalHost().getHostAddress();
+	String inetAddress = InetAddress.getLocalHost().getHostAddress();
 
 	/**
 	* Fired when a user account is created.
@@ -55,12 +55,12 @@ public abstract class UserCreationListener extends ExtensionPoint {
 	public static void fireUserCreated(@Nonnull String username) {
 		String currentTime = Instant.now().toString();
 		RequestContext.setHostName(hostName);
-        RequestContext.setIpAddress(inetAddress);
-        RequestContext.setTimeStamp()
-        RequestContext.setUserId(username);
+		RequestContext.setIpAddress(inetAddress);
+		RequestContext.setTimeStamp()
+		RequestContext.setUserId(username);
 
-        user.setUserId(username);
-        user.setTimeStamp(currentTime);
+		user.setUserId(username);
+		user.setTimeStamp(currentTime);
 		user.logEvent();
 		RequestContext.clear();
 
