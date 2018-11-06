@@ -19,6 +19,7 @@ package io.jenkins.plugins.audit;
 
 import java.util.UUID;
 import java.util.function.Supplier;
+import javax.annotation.Nonnull;
 
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.audit.annotation.Chained;
@@ -48,8 +49,6 @@ public final class RequestContext {
     public static final String IP_ADDRESS = "ipAddress";
     @ClientServer
     public static final String SESSION_ID = "sessionId";
-    @ClientServer
-    public static final String LOGIN_ID = "loginId";
     @Local
     public static final String CALLING_HOST = "callingHost";
 
@@ -75,10 +74,9 @@ public final class RequestContext {
 
     public static String getRequestId() {
         String uuidStr = ThreadContext.get(REQUEST_ID);
-        UUID uuid;
         if (uuidStr == null) {
-            uuid = UuidUtil.getTimeBasedUuid();
-            ThreadContext.put(REQUEST_ID, uuid.toString());
+            ThreadContext.put(REQUEST_ID, UuidUtil.getTimeBasedUuid().toString());
+            uuidStr = ThreadContext.get(REQUEST_ID);
         }
         return uuidStr;
     }
@@ -107,7 +105,7 @@ public final class RequestContext {
         return ThreadContext.get(IP_ADDRESS);
     }
 
-    public static void setUserId(String userId) {
+    public static void setUserId(@Nonnull String userId) {
         ThreadContext.put(USER_ID, userId);
     }
 
@@ -123,28 +121,25 @@ public final class RequestContext {
         return ThreadContext.get(REQUEST_URI);
     }
 
-    public static void setNodeName(String nodeName) {
+    public static void setNodeName(@Nonnull String nodeName) {
         ThreadContext.put(NODE_NAME, nodeName);
     }
 
     public static String getNodeName() {
-        return ThreadContext.get(NODE_NAME);
+        String nodeName = ThreadContext.get(NODE_NAME);
+        if (nodeName == null) {
+            ThreadContext.put(NODE_NAME, "master");
+            nodeName = ThreadContext.get(NODE_NAME);
+        }
+        return nodeName;
     }
 
-    public static void setTimeStamp(String timestamp) {
+    public static void setTimeStamp(@Nonnull String timestamp) {
         ThreadContext.put(TIMESTAMP, timestamp);
     }
 
     public static String getTimeStamp() {
         return ThreadContext.get(TIMESTAMP);
-    }
-
-    public static void setLoginId(String loginId) {
-        ThreadContext.put(LOGIN_ID, loginId);
-    }
-
-    public static String getLoginId() {
-        return ThreadContext.get(LOGIN_ID);
     }
 
     public static String getHostName() {
