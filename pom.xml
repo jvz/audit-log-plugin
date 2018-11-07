@@ -10,13 +10,15 @@
     <artifactId>audit-log-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
+
     <properties>
         <jenkins.version>2.60.3</jenkins.version>
         <slf4j.version>1.6.2</slf4j.version>
         <log4j.version>2.10.0</log4j.version>
         <log4j-audit.version>1.0.0</log4j-audit.version>
-	<java.level>8</java.level>
+	    <java.level>8</java.level>
     </properties>
+
     <name>Audit Log Plugin</name>
     <description>Audit logging for Jenkins with predefined audit events</description>
     <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
@@ -73,6 +75,91 @@
           </dependency>
       </dependencies>
     </dependencyManagement>
+
+    <build>
+    <!-- defines the plugin version in parent POM -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.jenkins-ci.tools</groupId>
+          <artifactId>maven-hpi-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <!-- uses the plugin goals in parent POM -->
+    <plugins>
+      <plugin>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <version>2.6</version>
+      </plugin>
+
+          <!-- handle unit testing of java classes -->
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.18.1</version>
+          <executions>
+            <execution>
+              <id>default-test</id>
+              <goals>
+                <goal>test</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <includes>
+              <include>**/Test*.java</include>
+              <include>**/*Test.java</include>
+            </includes>
+            <excludes>
+              <exclude>**/*FuncTest.java</exclude>
+            </excludes>
+            <forkCount>1</forkCount>
+            <reuseForks>false</reuseForks>
+            <systemPropertyVariables>
+              <environment>${environment}</environment>
+              <site>${site}</site>
+            </systemPropertyVariables>
+          </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- profiles for unit and integration testing -->
+  <profiles>
+    <profile>
+      <id>integration-tests</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.18.1</version>
+            <executions>
+              <execution>
+                <id>integration-tests</id>
+                <goals>
+                  <goal>integration-test</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <reuseForks>false</reuseForks>
+              <includes>
+                <include>**/*FuncTest.java</include>
+              </includes>
+              <systemPropertyVariables>
+                <environment>${environment}</environment>
+                <site>${site}</site>
+              </systemPropertyVariables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
     <repositories>
         <repository>
