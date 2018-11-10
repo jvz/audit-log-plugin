@@ -4,163 +4,206 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.25</version>
-        <relativePath />
+        <version>3.28</version>
+        <relativePath/>
     </parent>
     <artifactId>audit-log-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
-    <properties>
-        <jenkins.version>2.60.3</jenkins.version>
-        <slf4j.version>1.6.2</slf4j.version>
-        <log4j.version>2.10.0</log4j.version>
-        <log4j-audit.version>1.0.0</log4j-audit.version>
-	    <java.level>8</java.level>
-    </properties>
-
+    <!-- jenkins project information -->
     <name>Audit Log Plugin</name>
     <description>Audit logging for Jenkins with predefined audit events</description>
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
+    <url>https://github.com/jvz/audit-log-plugin</url>
     <licenses>
         <license>
             <name>MIT License</name>
             <url>http://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
-    <!-- Assuming you want to host on @jenkinsci:
-    <scm>
-        <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    </scm>
-    -->
-    <dependencyManagement>
-      <dependencies>
-          <dependency>
+    <!-- jenkins project global properties -->
+    <properties>
+        <!-- common properties to the project -->
+        <jenkins.version>2.60.3</jenkins.version>
+        <java.level>8</java.level>
+        <commons-lang3.version>3.8.1</commons-lang3.version>
+        <!-- log4j-specific properties -->
+        <log4j.version>2.11.1</log4j.version>
+        <log4j-audit.version>1.0.0</log4j-audit.version>
+        <!-- maven enforcer plugin properties -->
+        <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
+        <maven.enforcer.requireMavenVersion>[3.6.0,)</maven.enforcer.requireMavenVersion>
+        <extra-enforcer-rules.version>1.0-beta-9</extra-enforcer-rules.version>
+        <maven.enforcer.requireJavaVersion>8</maven.enforcer.requireJavaVersion>
+        <maven.enforcer.maxJdkVersion>1.8</maven.enforcer.maxJdkVersion>
+        <!-- other maven-specific properties -->
+        <maven-hpi-plugin.version>2.7</maven-hpi-plugin.version>
+        <maven.compiler.source>[1.8,)</maven.compiler.source>
+        <maven.compiler.target>[1.8,)</maven.compiler.target>
+        <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+        <!-- <maven.compiler.release>9</maven.compiler.release> -->
+    </properties>
+
+    <!-- Assuming you want to host on @jenkinsci: <scm> <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection> <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url> </scm> -->
+
+    <!-- defines all project dependencies -->
+    <dependencies>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-audit-api</artifactId>
             <version>${log4j-audit.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-audit-war</artifactId>
-            <version>${log4j-audit.version}</version>
-            <type>war</type>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-catalog-api</artifactId>
-            <version>${log4j-audit.version}</version>
-          </dependency>
-          <dependency>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>${log4j.version}</version>
-          </dependency>
-          <dependency>
+        </dependency>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
-          </dependency>
-          <dependency>
+        </dependency>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-jcl</artifactId>
-            <version>${log4j.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${log4j.version}</version>
-          </dependency>
-      </dependencies>
-    </dependencyManagement>
+            <artifactId>log4j-catalog-api</artifactId>
+            <version>${log4j-audit.version}</version>
+        </dependency>
+    </dependencies>
 
+    <!-- handle the maven build lifecycle phases -->
     <build>
-    <!-- defines the plugin version in parent POM -->
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.jenkins-ci.tools</groupId>
-          <artifactId>maven-hpi-plugin</artifactId>
-          <version>2.6</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <!-- uses the plugin goals in parent POM -->
-    <plugins>
-      <plugin>
-        <groupId>org.jenkins-ci.tools</groupId>
-        <artifactId>maven-hpi-plugin</artifactId>
-        <version>2.6</version>
-      </plugin>
-
-          <!-- handle unit testing of java classes -->
-      <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.18.1</version>
-          <executions>
-            <execution>
-              <id>default-test</id>
-              <goals>
-                <goal>test</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <includes>
-              <include>**/Test*.java</include>
-              <include>**/*Test.java</include>
-            </includes>
-            <excludes>
-              <exclude>**/*FuncTest.java</exclude>
-            </excludes>
-            <forkCount>1</forkCount>
-            <reuseForks>false</reuseForks>
-            <systemPropertyVariables>
-              <environment>${environment}</environment>
-              <site>${site}</site>
-            </systemPropertyVariables>
-          </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
-  <!-- profiles for unit and integration testing -->
-  <profiles>
-    <profile>
-      <id>integration-tests</id>
-      <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.18.1</version>
-            <executions>
-              <execution>
-                <id>integration-tests</id>
-                <goals>
-                  <goal>integration-test</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <reuseForks>false</reuseForks>
-              <includes>
-                <include>**/*FuncTest.java</include>
-              </includes>
-              <systemPropertyVariables>
-                <environment>${environment}</environment>
-                <site>${site}</site>
-              </systemPropertyVariables>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+            <!-- handles creation of jenkins plugin packages -->
+            <plugin>
+                <groupId>org.jenkins-ci.tools</groupId>
+                <artifactId>maven-hpi-plugin</artifactId>
+                <version>${maven-hpi-plugin.version}</version>
+            </plugin>
+            <!-- handle java class compilations -->
+            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-compiler-plugin</artifactId> <version>3.6.1</version> <configuration> <source>1.8</source> <target>1.8</target> <showDeprecation>true</showDeprecation>
+            <showWarnings>true</showWarnings> <compilerArguments> <Xmaxwarns>10000</Xmaxwarns> <Xlint/> </compilerArguments> <encoding>UTF-8</encoding> </configuration> </plugin> -->
 
+            <!-- handle unit testing of java classes -->
+            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> <version>2.18.1</version> <executions> <execution> <id>default-test</id> <goals> <goal>test</goal> </goals> </execution> </executions>
+            <configuration> <includes> <include>**/Test*.java</include> <include>**/*Test.java</include> </includes> <excludes> <exclude>**/*FuncTest.java</exclude> </excludes> <forkCount>1</forkCount> <reuseForks>false</reuseForks> <systemPropertyVariables>
+            <environment>${environment}</environment> <site>${site}</site> </systemPropertyVariables> </configuration> </plugin> -->
+
+            <!-- log4j audit maven plugin -->
+            <plugin>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-audit-maven-plugin</artifactId>
+                <version>${log4j-audit.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <packageName>org.apache.logging.log4j.audit.event</packageName>
+                            <enterpriseId>18060</enterpriseId>
+                            <maxKeyLength>32</maxKeyLength>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- versions-maven-plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${versions-maven-plugin.version}</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+            <!-- maven enforcer and complier -->
+            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-compiler-plugin</artifactId> <version>3.8.0</version> <configuration> <source>[1.8,)</source> <target>[1.8,)</target> <showDeprecation>true</showDeprecation>
+            <showWarnings>true</showWarnings> <compilerArguments> <Xmaxwarns>10000</Xmaxwarns> <Xlint/> </compilerArguments> <encoding>UTF-8</encoding> </configuration> </plugin> -->
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>display-info</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>display-info</goal>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>${maven.enforcer.requireMavenVersion}</version>
+                                    <message>3.3.1 required to at least look at .mvn/ if it exists.</message>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>${maven.enforcer.requireJavaVersion}</version>
+                                </requireJavaVersion>
+                                <enforceBytecodeVersion>
+                                    <maxJdkVersion>${maven.enforcer.maxJdkVersion}</maxJdkVersion>
+                                    <ignoredScopes>
+                                        <ignoredScope>test</ignoredScope>
+                                    </ignoredScopes>
+                                    <excludes>
+                                        <exclude>org.jenkins-ci.main:jenkins-core</exclude>
+                                        <exclude>org.jenkins-ci.main:cli</exclude>
+                                        <exclude>org.jenkins-ci.main:jenkins-test-harness</exclude>
+                                        <exclude>org.jenkins-ci.main:remoting</exclude>
+                                        <exclude>org.kohsuke.stapler:stapler</exclude>
+                                        <exclude>org.kohsuke.stapler:stapler-groovy</exclude>
+                                        <exclude>org.kohsuke.stapler:stapler-jelly</exclude>
+                                        <exclude>org.kohsuke.stapler:stapler-jrebel</exclude>
+                                        <exclude>org.jenkins-ci:task-reactor</exclude>
+                                        <exclude>com.google.code.findbugs:annotations</exclude>
+                                    </excludes>
+                                </enforceBytecodeVersion>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>javax.servlet:servlet-api</exclude>
+                                        <exclude>org.sonatype.sisu:sisu-guice</exclude>
+                                        <exclude>log4j:log4j:*:jar:compile</exclude>
+                                        <exclude>log4j:log4j:*:jar:runtime</exclude>
+                                        <exclude>commons-logging:commons-logging:*:jar:compile</exclude>
+                                        <exclude>commons-logging:commons-logging:*:jar:runtime</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                                <requireUpperBoundDeps>
+                                    <excludes>
+                                        <exclude>com.google.guava:guava</exclude>
+                                        <exclude>commons-logging:commons-logging</exclude>
+                                        <exclude>com.google.code.findbugs:jsr305</exclude>
+                                        <exclude>net.java.dev.jna:jna</exclude>
+                                    </excludes>
+                                </requireUpperBoundDeps>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>${extra-enforcer-rules.version}</version>
+                        <scope>compile</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- profiles for unit and integration testing -->
+    <!-- <profiles> <profile> <id>integration-tests</id> <build> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-failsafe-plugin</artifactId> <version>2.18.1</version> <executions> <execution> <id>integration-tests</id>
+    <goals> <goal>integration-test</goal> </goals> </execution> </executions> <configuration> <reuseForks>false</reuseForks> <includes> <include>**/*FuncTest.java</include> </includes> <systemPropertyVariables> <environment>${environment}</environment>
+    <site>${site}</site> </systemPropertyVariables> </configuration> </plugin> </plugins> </build> </profile> </profiles> -->
+
+    <!-- defines all repositories accessible to maven -->
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>

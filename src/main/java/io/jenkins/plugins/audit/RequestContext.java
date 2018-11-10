@@ -15,8 +15,8 @@
  * limitations under the license.
  */
 
-package org.apache.logging.audit;
-    
+package io.jenkins.plugins.audit;
+
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -56,7 +56,7 @@ public final class RequestContext {
     public static final String HOST_NAME = "hostName";
 
     private static final String LOCAL_HOST_NAME = NetUtils.getLocalHostname();
-        
+
     /**
      * The Supplier is used to populate the hostName key after the hostName value from the caller has been
      * placed into the callingHost map entry.
@@ -163,5 +163,5 @@ public final class RequestContext {
         ThreadContext.put(CALLING_HOST, hostName);
     }
 
-    
+
 }
