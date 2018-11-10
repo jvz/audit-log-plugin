@@ -65,7 +65,6 @@
             <plugin>
                 <groupId>org.jenkins-ci.tools</groupId>
                 <artifactId>maven-hpi-plugin</artifactId>
-                <version>2.7</version>
             </plugin>
             <!-- log4j audit maven plugin -->
             <plugin>
@@ -80,7 +79,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <packageName>org.apache.logging.log4j.audit.event</packageName>
+                            <packageName>io.jenkins.plugins.audit.event</packageName>
                             <enterpriseId>18060</enterpriseId>
                             <maxKeyLength>32</maxKeyLength>
                         </configuration>
