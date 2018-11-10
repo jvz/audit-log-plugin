@@ -37,11 +37,6 @@
             <version>${log4j-audit.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>${log4j.version}</version>
@@ -55,6 +50,12 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-catalog-api</artifactId>
             <version>${log4j-audit.version}</version>
+        </dependency>
+        <!-- fixes log4j-catalog-api commons-lang3 version mismatch issue -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
         </dependency>
     </dependencies>
 
@@ -80,7 +81,7 @@
                         </goals>
                         <configuration>
                             <packageName>io.jenkins.plugins.audit.event</packageName>
-                            <enterpriseId>18060</enterpriseId>
+                            <enterpriseId>38143</enterpriseId>
                             <maxKeyLength>32</maxKeyLength>
                         </configuration>
                     </execution>
@@ -95,67 +96,10 @@
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
             </plugin>
-            <!-- maven enforcer and compliers -->
+            <!-- version 1.0-beta-9 fixes https://github.com/mojohaus/extra-enforcer-rules/issues/31 -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>3.0.0-M2</version>
-                <executions>
-                    <execution>
-                        <id>display-info</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>display-info</goal>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[3.6.0,)</version>
-                                    <message>3.3.1 required to at least look at .mvn/ if it exists.</message>
-                                </requireMavenVersion>
-                                <requireJavaVersion>
-                                    <version>8</version>
-                                </requireJavaVersion>
-                                <enforceBytecodeVersion>
-                                    <maxJdkVersion>1.8</maxJdkVersion>
-                                    <ignoredScopes>
-                                        <ignoredScope>test</ignoredScope>
-                                    </ignoredScopes>
-                                    <excludes>
-                                        <exclude>org.jenkins-ci.main:jenkins-core</exclude>
-                                        <exclude>org.jenkins-ci.main:cli</exclude>
-                                        <exclude>org.jenkins-ci.main:jenkins-test-harness</exclude>
-                                        <exclude>org.jenkins-ci.main:remoting</exclude>
-                                        <exclude>org.kohsuke.stapler:stapler</exclude>
-                                        <exclude>org.kohsuke.stapler:stapler-groovy</exclude>
-                                        <exclude>org.kohsuke.stapler:stapler-jelly</exclude>
-                                        <exclude>org.kohsuke.stapler:stapler-jrebel</exclude>
-                                        <exclude>org.jenkins-ci:task-reactor</exclude>
-                                        <exclude>com.google.code.findbugs:annotations</exclude>
-                                    </excludes>
-                                </enforceBytecodeVersion>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <exclude>javax.servlet:servlet-api</exclude>
-                                        <exclude>org.sonatype.sisu:sisu-guice</exclude>
-                                        <exclude>log4j:log4j:*:jar:compile</exclude>
-                                        <exclude>log4j:log4j:*:jar:runtime</exclude>
-                                        <exclude>commons-logging:commons-logging:*:jar:compile</exclude>
-                                        <exclude>commons-logging:commons-logging:*:jar:runtime</exclude>
-                                    </excludes>
-                                </bannedDependencies>
-                                <requireUpperBoundDeps>
-                                    <excludes>
-                                        <exclude>com.google.guava:guava</exclude>
-                                        <exclude>commons-logging:commons-logging</exclude>
-                                        <exclude>com.google.code.findbugs:jsr305</exclude>
-                                        <exclude>net.java.dev.jna:jna</exclude>
-                                    </excludes>
-                                </requireUpperBoundDeps>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
                 <dependencies>
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
