@@ -15,12 +15,10 @@
  * limitations under the license.
  */
 
-package io.jenkins.plugins.audit.event;
+package io.jenkins.plugins.audit;
 
 import java.util.UUID;
 import java.util.function.Supplier;
-
-import io.jenkins.plugins.audit.event.*;
 
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.audit.annotation.Chained;
