@@ -40,6 +40,7 @@ import io.jenkins.plugins.audit.event.Logout;
 import org.apache.logging.log4j.audit.LogEventFactory;
 import org.apache.logging.log4j.core.util.NetUtils;
 import org.acegisecurity.userdetails.UserDetails;
+import org.kohsuke.stapler.Stapler;
 
 /**
  * Listener notified of user login and logout events.
@@ -86,12 +87,7 @@ public class UserLogListener extends SecurityListener {
         String currentTime = Instant.now().toString();
         Login login = LogEventFactory.getEvent(Login.class);
 
-        try {
-            RequestContext.setIpAddress(InetAddress.getLocalHost().getHostAddress());
-        } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Encoutered a network error",e);
-        }
-
+        RequestContext.setIpAddress(Stapler.getCurrentRequest().getRemoteAddr());
         login.setUserId(username);
         login.setTimestamp(currentTime);
         login.logEvent();
@@ -108,12 +104,7 @@ public class UserLogListener extends SecurityListener {
          String currentTime = Instant.now().toString();
          Logout logout = LogEventFactory.getEvent(Logout.class);
 
-         try {
-             RequestContext.setIpAddress(InetAddress.getLocalHost().getHostAddress());
-         } catch (IOException e) {
-             LOGGER.log(Level.WARNING, "Encoutered a network error",e);
-         }
-
+         RequestContext.setIpAddress(Stapler.getCurrentRequest().getRemoteAddr()); 
          logout.setUserId(username);
          logout.setTimestamp(currentTime);
          logout.logEvent();
