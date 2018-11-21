@@ -18,15 +18,11 @@
 package io.jenkins.plugins.audit;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
 import org.apache.logging.log4j.ThreadContext;
-import org.apache.logging.log4j.audit.annotation.Chained;
 import org.apache.logging.log4j.audit.annotation.ClientServer;
 import org.apache.logging.log4j.audit.annotation.HeaderPrefix;
-import org.apache.logging.log4j.audit.annotation.Local;
-import org.apache.logging.log4j.core.util.NetUtils;
 import org.apache.logging.log4j.core.util.UuidUtil;
 
 /**
@@ -47,21 +43,6 @@ public final class RequestContext {
     public static final String USER_ID = "userId";
     @ClientServer
     public static final String IP_ADDRESS = "ipAddress";
-    @ClientServer
-    public static final String SESSION_ID = "sessionId";
-    @Local
-    public static final String CALLING_HOST = "callingHost";
-
-    public static final String HOST_NAME = "hostName";
-
-    private static final String LOCAL_HOST_NAME = NetUtils.getLocalHostname();
-
-    /**
-     * The Supplier is used to populate the hostName key after the hostName value from the caller has been
-     * placed into the callingHost map entry.
-     */
-    @Chained(fieldName = HOST_NAME, chainedFieldName = CALLING_HOST)
-    public static final Supplier<String> LOCAL_HOST_SUPPLIER = () -> LOCAL_HOST_NAME;
 
     /**
      * The methods in this class are not required by framework components that use the RequestContext properties.
@@ -79,22 +60,6 @@ public final class RequestContext {
             uuidStr = ThreadContext.get(REQUEST_ID);
         }
         return uuidStr;
-    }
-
-    public static String getSessionId() {
-        return ThreadContext.get(SESSION_ID);
-    }
-
-    public static void setSessionId(UUID sessionId) {
-        if (sessionId != null) {
-            ThreadContext.put(SESSION_ID, sessionId.toString());
-        }
-    }
-
-    public static void setSessionId(String sessionId) {
-        if (sessionId != null) {
-            ThreadContext.put(SESSION_ID, sessionId);
-        }
     }
 
     public static void setIpAddress(String address) {
@@ -140,22 +105,6 @@ public final class RequestContext {
 
     public static String getTimeStamp() {
         return ThreadContext.get(TIMESTAMP);
-    }
-
-    public static String getHostName() {
-        return ThreadContext.get(HOST_NAME);
-    }
-
-    public static void setHostName(String hostName) {
-        ThreadContext.put(HOST_NAME, hostName);
-    }
-
-    public static String getCallingHost() {
-        return ThreadContext.get(CALLING_HOST);
-    }
-
-    public static void setCallingHost(String hostName) {
-        ThreadContext.put(CALLING_HOST, hostName);
     }
 
 
