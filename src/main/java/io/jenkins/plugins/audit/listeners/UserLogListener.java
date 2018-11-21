@@ -27,18 +27,12 @@ import hudson.Extension;
 import jenkins.security.SecurityListener;
 import io.jenkins.plugins.audit.RequestContext;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.time.Instant;
-import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
 import io.jenkins.plugins.audit.event.Login;
 import io.jenkins.plugins.audit.event.Logout;
 import org.apache.logging.log4j.audit.LogEventFactory;
-import org.apache.logging.log4j.core.util.NetUtils;
 import org.acegisecurity.userdetails.UserDetails;
 import org.kohsuke.stapler.Stapler;
 
@@ -47,8 +41,6 @@ import org.kohsuke.stapler.Stapler;
  */
 @Extension
 public class UserLogListener extends SecurityListener {
-
-    private static final Logger LOGGER = Logger.getLogger(UserLogListener.class.getName());
 
     /**
      * Fired when a user was successfully authenticated using credentials. It could be password or any other credentials.
@@ -104,7 +96,7 @@ public class UserLogListener extends SecurityListener {
          String currentTime = Instant.now().toString();
          Logout logout = LogEventFactory.getEvent(Logout.class);
 
-         RequestContext.setIpAddress(Stapler.getCurrentRequest().getRemoteAddr()); 
+         RequestContext.setIpAddress(Stapler.getCurrentRequest().getRemoteAddr());
          logout.setUserId(username);
          logout.setTimestamp(currentTime);
          logout.logEvent();
