@@ -28,7 +28,6 @@ import jenkins.security.SecurityListener;
 import io.jenkins.plugins.audit.RequestContext;
 
 import java.io.IOException;
-import java.lang.UnsupportedOperationException;
 import java.util.logging.Logger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -55,31 +54,17 @@ public class UserLogListener extends SecurityListener {
      * This might be via the web UI, or via REST (using API token or Basic), or CLI (remoting, auth, ssh)
      * or any other way plugins can propose.
      *
-     * UserLogListener does not use this abstract class method, however, rather than leaving
-     * its implementation empty it is made to throw an exception if the method is ever called.
-     *
      * @param details details of the newly authenticated user, such as name and groups.
-     * @throws UnsupportedOperationException if the method is called wrongly.
      */
-    @Override
-    protected void authenticated(@Nonnull UserDetails details) {
-        throw new UnsupportedOperationException("This class does not use this method.");
-    }
+    protected void authenticated(@Nonnull UserDetails details) {}
 
     /**
      * Fired when a user has failed to log in.
      * Would be called after {@link #failedToAuthenticate}.
      *
-     * UserLogListener does not use this abstract class method, however, rather than leaving
-     * its implementation empty it is made to throw an exception if the method is ever called.
-     *
      * @param username the user
-     * @throws UnsupportedOperationException if the method is called wrongly.
      */
-    @Override
-    protected void failedToLogIn(@Nonnull String username) {
-        throw new UnsupportedOperationException("This class does not use this method.");
-    }
+    protected void failedToLogIn(@Nonnull String username) {}
 
     /**
      * Fired when a user tried to authenticate but failed.
@@ -87,13 +72,9 @@ public class UserLogListener extends SecurityListener {
      * its implementation empty it is made to throw an exception if the method is ever called.
      *
      * @param username the user
-     * @throws UnsupportedOperationException if the method is called wrongly.
      * @see #authenticated
      */
-    @Override
-    protected void failedToAuthenticate(@Nonnull String username) {
-        throw new UnsupportedOperationException("This class does not use this method.");
-    }
+    protected void failedToAuthenticate(@Nonnull String username) {}
 
     /**
      * Fired when a user has logged in, event logged via Log4j-audit.
