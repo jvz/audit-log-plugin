@@ -87,10 +87,7 @@ public class UserLogListener extends SecurityListener {
         Login login = LogEventFactory.getEvent(Login.class);
 
         try {
-            RequestContext.setHostName(NetUtils.getLocalHostname());
             RequestContext.setIpAddress(InetAddress.getLocalHost().getHostAddress());
-        } catch (UnknownHostException e) {
-            LOGGER.log(Level.WARNING, "Failed to resolve host machine IP address",e);
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Encoutered a network error",e);
         }
@@ -112,10 +109,7 @@ public class UserLogListener extends SecurityListener {
          Logout logout = LogEventFactory.getEvent(Logout.class);
 
          try {
-             RequestContext.setHostName(NetUtils.getLocalHostname());
              RequestContext.setIpAddress(InetAddress.getLocalHost().getHostAddress());
-         } catch (UnknownHostException e) {
-             LOGGER.log(Level.WARNING, "Failed to resolve host machine IP address",e);
          } catch (IOException e) {
              LOGGER.log(Level.WARNING, "Encoutered a network error",e);
          }
