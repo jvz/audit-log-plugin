@@ -16,15 +16,12 @@
 ~ limitations under the license.
 -->
 <Configuration status="ERROR">
-  <properties>
-    <property name="LOG_DIR">${env:JENKINS_HOME}/logs</property>
-  </properties>
+  <Properties>
+    <Property name="LOG_DIR">${env:JENKINS_HOME}/logs</Property>
+</Properties>
   <Appenders>
-
-    </RollingFile>
     <RollingFile name="audit" fileName="${LOG_DIR}/audit.log" filePattern="${LOG_DIR}/archive/audit.log.%d{yyyyMMdd_HHmmss}-%i">
       <RFC5424Layout enterpriseNumber="38143" includeMDC="true" mdcId="RequestContext" appName="Log4j-audit-plugin" mdcPrefix="" newLine="true"/>
-
     </RollingFile>
   </Appenders>
   <Loggers>
